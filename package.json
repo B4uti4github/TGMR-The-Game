@@ -1,0 +1,11 @@
+{
+    "name": "tgmr",
+    "main": "index.html",
+    "window": {
+        "title": "The Grand Meme Reset: The Game",
+        "position": "center",
+        "width": 800,
+        "height": 450,
+        "icon": "icon.png"
+    }
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grand Meme Reset</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("canvas").hide()
+            $("#History").hide()
+            $("img").hide()
+            $("#playbutton").on("click", function(){
+                $("#start").hide()
+                $("#History").show()
+            })
+            $("#History").on("click", function(){
+                $("#History").hide()
+                $("body").css("background-color", "black")
+                $("canvas").show()
+                const ctx = document.getElementById("canvas").getContext("2d")
+                const b4 = new Image()
+                b4.src = "B4uti.png"
+                const parallaxi1j1 = new Image()
+                var BGxpos = 0
+                var lastTime = null
+                var IsRight = false
+                var IsLeft = false
+                var IsDown = false
+                var Viajoaladerecha = false
+                var Viajoalaizquierda = false
+                var delayPDeathTime = 0
+                Cam = {
+                    x : 0,
+                    y : 0,
+                }
+                class Personaje{
+                    constructor(x, y, w, h, gravity, velocity, esenemigo, sprite, health, realx, realy){
+                        this.x = x
+                        this.y = y
+                        this.w = w
+                        this.h = h
+                        this.gravity = gravity
+                        this.velocity = velocity
+                        this.enemigo = esenemigo
+                        this.hit = null
+                        this.sprite = sprite
+                        this.health = health
+                        this.realX = realx
+                        this.realY = realy
+                        this.image = new Image()
+                        this.image.src = sprite
+                        this.delta = 0
+                    }
+                    draw(){
+                        if(this.health > 0){
+                            ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
+                        } else{
+                            if(!this.enemigo){
+                            if(delayPDeathTime < 1){
+                                $("#stategame").html = "Reiniciando"
+                                delayPDeathTime += this.delta
+                            } else{
+                                this.health = 100
+                            }
+                            }
+                        }
+                    }
+                } 
+                var estaenmovimiento = false
+                var B4uti = new Personaje(100,405,45,45,1,1, false, "./B4uti.png", 100, 0, 0)
+                var Enemigos = [
+                    [new Personaje(200 - Cam.x,405,45,45,1,1, true, "./Spritesheets/Six-Seven/Six-Seven1.webp", 100, 200, 0)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)],
+                    [new Personaje(1,405,45,45,1,1, true, b4)]
+                ]
+                stage = 0
+                function movediv(timestamp){
+                    ctx.clearRect(0,0,800,450);
+                    if(lastTime !== null){
+                        var delta = (timestamp - lastTime) / 1000;
+                        addEventListener("keydown", function(e){
+                                switch(e.code){
+                                    case "ArrowLeft":
+                                        IsLeft = true
+                                        break
+                                    case "ArrowRight":
+                                        IsRight = true
+                                        break
+                                    case "ArrowDown":
+                                        IsDown = true
+                                        break
+                                }
+                        })
+                        addEventListener("keyup", function(e){
+                                switch(e.code){
+                                    case "ArrowLeft":
+                                        IsLeft = false
+                                        break
+                                    case "ArrowRight":
+                                        IsRight = false
+                                        break
+                                    case "ArrowDown":
+                                        IsDown = false
+                                        break
+                                }
+                        })
+                        
+                        if(B4uti.x < 200 && Cam.x == 0){
+                            if(B4uti.x <= 0){
+                                Viajoalaizquierda = true
+                            }
+                        }
+                        Viajoaladerecha = true
+                        if(IsLeft){
+                            Enemigos[0][0].x = 200 - Cam.x
+                            B4uti.x -= 800 / 4.5 * delta * B4uti.velocity
+                            if(B4uti.x < 0){
+                                B4uti.x = 0
+                                Viajoalaizquierda = true
+                            }
+                            if(B4uti.x >= 200){
+                                B4uti.x = 200
+                                BGxpos += 800 / 4.5 * delta
+                                BGxpos = Math.round(BGxpos)
+                                Viajoaladerecha = true
+                                Cam.x -= 800 / 4.5 * delta
+                                Cam.x = Math.round(Cam.x)
+                            }
+                        }
+                        
+                        if(IsRight){
+                            Enemigos[0][0].x = 200 - Cam.x
+                            B4uti.x += 800 / 4.5 * delta * B4uti.velocity
+                            if(B4uti.x < 0){
+                                B4uti.x = 0
+                                Viajoalaizquierda = true
+                            }
+                            if(B4uti.x >= 0 && B4uti.x < 200 && Cam.x >= 0){
+                                estaenmovimiento = true
+                            } else{
+                                estaenmovimiento = false
+                            }
+                            if(B4uti.x >= 200){
+                                B4uti.x = 200
+                                BGxpos -= 800 / 4.5 * delta
+                                BGxpos = Math.round(BGxpos)
+                                Viajoaladerecha = true
+                                Cam.x += 800 / 4.5 * delta
+                                Cam.x = Math.round(Cam.x)
+                            }
+                        }
+                        document.getElementById("canvas").style.backgroundPosition = `${BGxpos}px 0px`;
+                        Enemigos[0][0].draw()
+                        if(Enemigos[0][0].health > 0){
+                            if(estaenmovimiento){
+                                if(B4uti.x >= Enemigos[0][0].x - Enemigos[0][0].w / 2 - Cam.x && B4uti.x <= Enemigos[0][0].x + Enemigos[0][0].w / 2 - Cam.x && Enemigos[0][0].health > 0){
+                                    B4uti.health -= 25 * delta
+                                    if(IsDown && B4uti.health > 0){
+                                        Enemigos[0][0].health -= 100 * delta
+                                    }
+                                    if(B4uti.health <= 0){
+                                        B4uti.x = 0
+                                        Cam.x = 0
+                                    }
+                                }
+                            } else{
+                                if(B4uti.x >= Enemigos[0][0].x - Enemigos[0][0].w / 2 && B4uti.x <= Enemigos[0][0].x + Enemigos[0][0].w / 2 && Enemigos[0][0].health > 0){
+                                    B4uti.health -= 25 * delta
+                                    if(IsDown && B4uti.health > 0){
+                                        Enemigos[0][0].health -= 100 * delta
+                                    }
+                                    if(B4uti.health <= 0){
+                                        B4uti.x = 0
+                                        Cam.x = 0
+                                        Enemigos[0][0].x = Enemigos[0][0].realX - Cam.x
+                                    }
+                                }
+                            }
+                        }
+                        B4uti.delta = delta
+                        B4uti.draw()
+                    }
+                    lastTime = timestamp
+                    requestAnimationFrame(movediv)
+                }
+                requestAnimationFrame(movediv)
+            })
+            
+        });
+    </script>
+</head>
+<body>
+    <section id="start">
+        <h1 id="titlegame">The Grand Meme Reset</h1>
+        <button id="playbutton">Play</button>
+    </section>
+    <section id="History">
+        <div class="monologo">
+        <p>Hubo una batalla que paso hace años y sigue donde competian memes para que no quedaran muertos y pasados de moda, se que parecen que estan muertos pero van a resucitar, para batallar con el Dr RobaDopamina, quien hizo los brainrots que son Memes Artificales para que se distrayeran pero que sean imparables, adictivos y dificiles de morir, ¿o no?, ¡Entonces empieza la batalla!</p>
+        </div>
+        <button id="playbutton1" >Play</button>
+    </section>
+    <img id="b4uti" src="B4uti.png" alt="B4uti sprite" width="80" height="45"/>
+    <canvas id="canvas" width="800" height="450"></canvas>
+    <style>
+        #start{
+            display: flex;
+            justify-content: center;
+        }
+        #playbutton{
+            position: fixed;
+            bottom: 10%;
+        }
+        #titlegame{
+            top: 10%;
+            position: fixed;
+        }
+        button{
+            font-family: cursive;
+        }
+        body{
+            font-family: cursive;
+        }
+        #stategame{
+            color: white;
+        }
+        #History{
+            position: fixed;
+            display: block;
+            justify-content: center;
+            align-content: center;
+            margin-left: 30%;
+            margin-bottom: 10%;
+            margin-right: 30%;
+            margin-top: 10%;
+        }
+        .monologo{
+            background-color: rgba(10, 10, 10, 0.555);
+            color: white;
+            border: 1% white;
+        }
+        canvas{
+            position: fixed;
+            background-color: black;
+            background-image: url("city-1/BG.png");
+            image-rendering: pixelated;
+            background-size: 100% 100%;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# The Grand Meme Reset
+Es un juego que se trata de derrotar a los memes artificiales llamados brainrots para revivir a los memes antiguos y salvar a la generación de ahora, consiguiendo los 3 epocas doradas para poder hacer el gran reseteo de memes, mientras que antes de eso hay 3 mapas jugables (estamos en etapas de prueba prealpha asi que es solo el comienzo), donde tendras que derrotar a los brainrots de tendencias, en otro mapas los de los italian brainrots, y el detras de las apps.
+>[!NOTE] 
+> Esto esta en etapas de prueba pre-alpha.
+> Cuando ya es jugable algunos niveles en el primer mapa, es alpha, cuando ya se termino el primer mapa y algunos niveles del segundo mapa, es beta.
+> Y por cierto, esto esta en fair use, osea de las personas quienes trabajan en este proyecto personalmente y no comerciable, no queremos infrigir copyright de algunos memes y esto es fair use, aunque tambien puede haber algunas canciones Creative Commons pero recomiendo CC BY para que todos pudieran hacer mods y remixs y monetizar en tus videos, Igual recomiendo Creatives Commons en algunas canciones
