@@ -206,6 +206,9 @@
         </div>
         <button id="playbutton1" >Play</button>
     </section>
+    <section class="boton">
+        <button class="boton" id="attack">Jump</button>
+    </section>
     <img id="b4uti" src="B4uti.png" alt="B4uti sprite" width="80" height="45"/>
     <canvas id="canvas" width="800" height="450"></canvas>
     <style>
@@ -232,25 +235,49 @@
         }
         #History{
             position: fixed;
-            display: block;
+            display: flex;
             justify-content: center;
             align-content: center;
             margin-left: 30%;
             margin-bottom: 10%;
             margin-right: 30%;
             margin-top: 10%;
+            height: 30%;
         }
         .monologo{
             background-color: rgba(10, 10, 10, 0.555);
             color: white;
             border: 1% white;
         }
+        #attack{
+            top: 10%;
+        }
         canvas{
-            position: fixed;
-            background-color: black;
+            display: fixed;
+            background-color: rgb(255, 255, 255);
             background-image: url("city-1/BG.png");
             image-rendering: pixelated;
             background-size: 100% 100%;
+            margin-left: auto;
+            margin-right:auto;
+            width: 800px;
+            height: 450px;
+        }
+        .boton{
+            visibility: hidden;
+            position: fixed;
+        }
+        @media (max-width: 800px) {
+            .boton{
+                opacity: 33%;
+                visibility: visible;
+            }
+            canvas{
+                aspect-ratio: 16/9;
+                width: 100%;
+                height: 100%;
+                margin: auto;
+            }
         }
     </style>
 </body>
