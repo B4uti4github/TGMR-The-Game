@@ -27,12 +27,29 @@
                 var IsRight = false
                 var IsLeft = false
                 var IsDown = false
+                var IsUp = false
                 var Viajoaladerecha = false
                 var Viajoalaizquierda = false
                 var delayPDeathTime = 0
                 Cam = {
                     x : 0,
                     y : 0,
+                }
+                class Estructura{
+                    constructor(x, y, w, h, realx, realy, sprite){
+                        this.x = x
+                        this.y = y
+                        this.w = w
+                        this.h = h
+                        this.realX = realx 
+                        this.realY = realy 
+                        this.sprite = sprite
+                        this.image = new Image(this.w, this.h)
+                        this.image.src = this.sprite
+                    }
+                    draw(){
+                        ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
+                    }
                 }
                 class Personaje{
                     constructor(x, y, w, h, gravity, velocity, esenemigo, sprite, health, realx, realy){
@@ -49,8 +66,45 @@
                         this.realX = realx
                         this.realY = realy
                         this.image = new Image()
-                        this.image.src = sprite
+                        this.image.src = this.sprite
                         this.delta = 0
+                        this.estaenelsuelo = true
+                        this.jumpflag = false
+                        this.beforey = 0
+                    }
+                    jump(){
+                        if(this.estaenelsuelo){
+                            this.beforey = this.y
+                            this.estaenelsuelo = false
+                        } else {
+                            if(this.y <= 100 * this.gravity + this.beforey){
+                                this.jumpflag = true
+                            } else if(this.y > 450){
+                                this.y = 0
+                                this.estaenelsuelo = true
+                                this.jumpflag = false
+                            } 
+                            if(this.hit){ //siempre si hay hit, cuando no este colisionado es null
+                                    if(this.x >= this.hit.x - this.hit.w / 2 &&  this.x <= this.hit.x + this.hit.w / 2 && this.y >= this.hit.y - this.hit.h / 2 &&  this.y <= this.hit.y + this.hit.h / 2){
+                                        this.y += 100 * this.gravity * this.delta
+                                    } else{
+                                        this.hit = null
+                                    }
+                            } else{
+                                    this.y -= 100 * this.gravity * this.delta
+                            }
+                            if(this.jumpflag == true) {
+                                if(this.hit){
+                                    if(this.x >= this.hit.x - this.hit.w / 2 &&  this.x <= this.hit.x + this.hit.w / 2 && this.y >= this.hit.y - this.hit.h / 2 &&  this.y <= this.hit.y + this.hit.h / 2){
+                                        //nothing
+                                    } else{
+                                        this.hit = null
+                                    }
+                                } else{
+                                    this.y += 100 * this.gravity * this.delta
+                                }
+                            }
+                        }
                     }
                     draw(){
                         if(this.health > 0){
@@ -68,9 +122,9 @@
                     }
                 } 
                 var estaenmovimiento = false
-                var B4uti = new Personaje(100,405,45,45,1,1, false, "./B4uti.png", 100, 0, 0)
+                var B4uti = new Personaje(100,405,45,45,1,1, false, "./B4uti.png", 100, 100, 0)
                 var Enemigos = [
-                    [new Personaje(200 - Cam.x,405,45,45,1,1, true, "./Spritesheets/Six-Seven/Six-Seven1.webp", 100, 200, 0)],
+                    [new Personaje(170 - Cam.x,405,45,45,1,1, true, "./Spritesheets/Six-Seven/Six-Seven1.webp", 170, 0, 0)],
                     [new Personaje(1,405,45,45,1,1, true, b4)],
                     [new Personaje(1,405,45,45,1,1, true, b4)],
                     [new Personaje(1,405,45,45,1,1, true, b4)],
@@ -78,6 +132,15 @@
                     [new Personaje(1,405,45,45,1,1, true, b4)],
                     [new Personaje(1,405,45,45,1,1, true, b4)],
                     [new Personaje(1,405,45,45,1,1, true, b4)]
+                ]
+                var Estructuras = [
+                    [new Estructura(200 - Cam.x, 300, 45, 45, "./Spritesheets/structures/structure-0001.webp")],
+                    [],
+                    [],
+                    [],
+                    [],
+                    [],
+                    []
                 ]
                 stage = 0
                 function movediv(timestamp){
@@ -95,6 +158,9 @@
                                     case "ArrowDown":
                                         IsDown = true
                                         break
+                                    case "ArrowUp":
+                                        IsUp = true
+                                        break
                                 }
                         })
                         addEventListener("keyup", function(e){
@@ -107,6 +173,9 @@
                                         break
                                     case "ArrowDown":
                                         IsDown = false
+                                        break
+                                    case "ArrowUp":
+                                        IsUp = false
                                         break
                                 }
                         })
@@ -182,6 +251,16 @@
                                     }
                                 }
                             }
+                            Estructuras[0].forEach(element => {
+                                    if(B4uti.x >= Estructuras[0].x - Estructuras[0].w / 2 &&  B4uti.x <= Estructuras[0].x + Estructuras[0].w / 2 && B4uti.y >= Estructuras[0].y - Estructuras[0].h / 2 &&  B4uti.y <= Estructura[0].y + Estructuras[0].h / 2){
+                                        B4uti.hit = Estructuras[0]
+                                    } else{
+                                        B4uti.hit = null
+                                    }
+                            });
+                        }
+                        if(IsUp){
+                            B4uti.jump()
                         }
                         B4uti.delta = delta
                         B4uti.draw()
